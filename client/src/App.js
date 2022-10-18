@@ -4,7 +4,7 @@ import axios from 'axios'
 
 function App() {
   const CLIENT_ID = '5e9cc39f4b1648819b2f5ca285f3ce34';
-  const REDIRECT_URI = 'http://10.90.11.121:3000';
+  const REDIRECT_URI = 'http://localhost:3000';
   const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
   const RESPONSE_TYPE = 'token';
   
@@ -31,8 +31,7 @@ function App() {
     
       Authorization: `Bearer ${token}`
     }}).then((res)=>{
-      setReleases(res.data.albums.items)
-      console.log(releases)
+      setReleases(res.data.albums.items);
     })
   }
 
@@ -51,11 +50,11 @@ function App() {
         }
         <button onClick={getLatest}>Get latest</button>
       </header>
-        <div style={{display:'flex',flexWrap:'wrap',alignContent:'center',justifyContent:'center'}}>
+        <div  style={{display:'flex',flexWrap:'wrap',alignContent:'center',justifyContent:'center'}}>
           {releases.map((item,key)=>{
             console.log(item)
             return (
-              <div key={key} style={{
+              <div className='item' key={key} style={{
                 minWidth:'350px',
                 minHeight:'400px',
                 borderWidth:'1px',
@@ -65,6 +64,7 @@ function App() {
                 paddingTop:'10px',
                 marginTop:'10px',
                 marginBottom:'10px  '}}>
+                  <a href={item.external_urls.spotify} >
                   <img src={item.images[1].url} alt="album artwork" style={{borderRadius:"15%"}}/>
                   <p>{item.name} | {item.artists.map((person)=>{
                     return person.name
@@ -72,6 +72,7 @@ function App() {
                   </p>
                   <p>Released: {item.release_date}</p>
                   <p>Tracks: {item.total_tracks}</p>
+                </a>
               </div>
             )
           })

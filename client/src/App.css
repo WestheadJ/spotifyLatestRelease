@@ -3,6 +3,16 @@
 
 }
 
+button{
+  width: 15%;
+  height: 30px;
+  margin: 10px ;
+  font-size: 50%;
+  font-weight: bold;
+  border-radius: 32px;
+  background-color: white;
+}
+
 body{
   background-color: #282c34;
   color: white;
@@ -41,4 +51,26 @@ body{
   to {
     transform: rotate(360deg);
   }
+}
+
+.item:hover{
+  background-color: #5e5f62;
+  margin: 5px;
+}
+
+.item a:link{
+  color: white;
+  text-decoration: none;
+}
+
+.item a:visited{
+  color: white;
+}
+
+.item a:hover{
+  color: rgb(206, 206, 206);
+}
+
+.item a:hover{
+  color: rgb(206, 206, 206);
 }
