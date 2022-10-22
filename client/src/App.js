@@ -11,7 +11,8 @@ function App() {
   const [token,setToken] = useState("")
   const [releases,setReleases] = useState([])
   const [userArtists,setUserArtists] = useState([])
-  
+  const [usersSongs,setUserSongs] = useState([])
+
   useEffect(() => {
     const hash = window.location.hash
     let token = window.localStorage.getItem("token")
@@ -33,6 +34,8 @@ function App() {
       Authorization: `Bearer ${token}`
     }}).then((res)=>{
       setReleases(res.data.albums.items);
+      setUserArtists([])
+      setUserSongs([])
     })
   }
 
@@ -41,7 +44,19 @@ function App() {
       Authorization: `Bearer ${token}`
     }}).then((res)=>{
       setReleases([])
+      setUserSongs([])
       setUserArtists(res.data.items)
+    })
+  }
+
+  function getUserSongs(){
+    axios.get('https://api.spotify.com/v1/me/top/tracks?offset=0&limit=50&time_range=short_term',{headers:{
+      Authorization: `Bearer ${token}`
+    }}).then((res)=>{
+      console.log(res.data.items);
+      setReleases([]);
+      setUserArtists([]);
+      setUserSongs(res.data.items)
     })
   }
 
@@ -60,6 +75,7 @@ function App() {
             <button onClick={logout}>Logout</button>
             <button onClick={getLatest}>Get Latest</button>
             <button onClick={getUserArtists}>Get Top Artists</button>
+            <button onClick={getUserSongs}>Get Top Songs</button>
           </>
         }
         
@@ -100,7 +116,6 @@ function App() {
 
         <div style={{display:'flex',flexWrap:'wrap',alignContent:'center',justifyContent:'center',textAlign:'center'  }}>
           {userArtists.map((item,key)=>{
-            console.log(item.genres.length)
             return (
               <>
                   <div className='item' key={key} 
@@ -142,8 +157,43 @@ function App() {
           })
         
         }
-        </div>      
+        </div>
 
+        <div style={{display:'flex',flexWrap:'wrap',alignContent:'center',justifyContent:'center',textAlign:'center'  }}>
+          {usersSongs.map((item,keyThree)=>{
+            console.log(item)
+            return (
+              <>
+                  <div className='item' key={keyThree} 
+                    style={{
+                    minWidth:'450px',
+                    maxWidth:'450px',
+                    minHeight:'500px',
+                    maxHeight:'500px',
+                    borderWidth:'1px',
+                    borderRadius:'15%', 
+                    marginLeft:"10px", 
+                    marginRight:'10px', 
+                    paddingTop:'10px',
+                    marginTop:'10px',
+                    marginBottom:'10px  '}}>
+                      <a href={item.external_urls.spotify } >
+                        <img src={item.album.images[1].url} alt="album artwork" style={{borderRadius:"15%",minHeight:"300px",minWidth:"300px",maxWidth:"300px",maxHeight:"300px"}}/>
+                        <p>{item.name}</p>
+                        <p>{item.album.artists.map((albumItem,keyFour)=>{
+                          return albumItem.name + " ";                          
+                        })}
+                        </p>
+                    </a>
+                  </div>
+                
+              </>
+            )
+          })
+        
+        }
+        </div>
+        
     </div>
   ); 
 }
