@@ -41,7 +41,7 @@ function App() {
   }
 
   function getUserArtists(){
-    axios.get('https://api.spotify.com/v1/me/top/artists?offset=0&limit=50',{headers:{
+    axios.get('https://api.spotify.com/v1/me/top/artists?offset=0&limit=50&time_range=short_term',{headers:{
       Authorization: `Bearer ${token}`
     }}).then((res)=>{
       setReleases([])
