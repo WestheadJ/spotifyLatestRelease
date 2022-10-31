@@ -4,18 +4,21 @@ import axios from 'axios'
 import configs from './config';
 
 function App() {
+  // Configs Import
   const CLIENT_ID = configs.CLIENT_ID
   const REDIRECT_URI = configs.REDIRECT_URI
   const AUTH_ENDPOINT = configs.AUTH_ENDPOINT
   const RESPONSE_TYPE = configs.RESPONSE_TYPE
   
+  // States
   const [token,setToken] = useState("")
   const [releases,setReleases] = useState([])
   const [userArtists,setUserArtists] = useState([])
   const [usersSongs,setUserSongs] = useState([])
 
+  // UseEffect Function to create a token for the spotify requests storing it in local storage
   useEffect(() => {
-    const hash = window.location.hash
+    const hash = window.location.hash;
     let token = window.localStorage.getItem("token")
 
     if (!token && hash) {
@@ -29,6 +32,7 @@ function App() {
 
 }, [])
 
+  // GET Request to the spotifyAPI setting it to the Releases State
   function getLatest(){
     axios.get('https://api.spotify.com/v1/browse/new-releases?limit=50&offset=0',{headers:{
     
@@ -40,6 +44,7 @@ function App() {
     })
   }
 
+  // GET Request to the SpotifyAPI setting it to the UsersArtists state
   function getUserArtists(){
     axios.get('https://api.spotify.com/v1/me/top/artists?offset=0&limit=50&time_range=short_term',{headers:{
       Authorization: `Bearer ${token}`
@@ -50,6 +55,7 @@ function App() {
     })
   }
 
+  // GET Request to the SpotifyAPI setting it to the UsersSongs state
   function getUserSongs(){
     axios.get('https://api.spotify.com/v1/me/top/tracks?offset=0&limit=50&time_range=short_term',{headers:{
       Authorization: `Bearer ${token}`
@@ -61,6 +67,7 @@ function App() {
     })
   }
 
+  // Logout Function clearing the token from localstorage
   const logout = () => {
     setToken("")
     window.localStorage.removeItem("token")
@@ -70,6 +77,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Spotify Latest</h1>
+        {/* If there's no token don't display the buttons */}
         {!token ?
           <a href={`${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=user-top-read`}><button className='login-button'>Login to Spotify</button></a>: 
           <>
@@ -81,7 +89,15 @@ function App() {
         }
         
       </header>
-  
+
+      {/* Titles that display only if the states populated */}
+      <div style={{textAlign:'center'}}>
+        {releases.length !== 0 ?<h3>Spotify Latest Releases</h3> :<></>}
+        {userArtists.length !== 0 ?<h3>Your Artists</h3> :<></>}
+        {usersSongs.length !== 0 ?<h3>Your Latest Songs</h3> :<></>}
+      </div>
+        
+        {/* Releases Container */}
         <div  style={{display:'flex',flexWrap:'wrap',alignContent:'center',justifyContent:'center'}}>
           {releases.map((item,key)=>{
             return (
@@ -111,10 +127,10 @@ function App() {
               </>
             )
           })
-        
         }
         </div>
 
+        {/* Users Artists Container */}
         <div style={{display:'flex',flexWrap:'wrap',alignContent:'center',justifyContent:'center',textAlign:'center'  }}>
           {userArtists.map((item,key)=>{
             return (
@@ -156,10 +172,10 @@ function App() {
               </>
             )
           })
-        
         }
         </div>
 
+        {/* Users Songs Container */}
         <div style={{display:'flex',flexWrap:'wrap',alignContent:'center',justifyContent:'center',textAlign:'center'  }}>
           {usersSongs.map((item,keyThree)=>{
             console.log(item)
